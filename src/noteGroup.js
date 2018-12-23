@@ -213,11 +213,11 @@ class File {
             sub = paths[paths.length - 2];
 
         if (title === undefined)
-            throw new Exception('TITLE line missing for file ' + filePath);
+            throw 'TITLE line missing for file ' + filePath;
         if (category=== undefined)
-            throw new Exception('CATEGORY line missing for file ' + filePath);
+            throw 'CATEGORY line missing for file ' + filePath;
         if (sub === undefined)
-            throw new Exception('SUB line missing for file ' + filePath);
+            throw 'SUB line missing for file ' + filePath;
         if (number === undefined || Number.isNaN(+number))
             log('[ERROR] NUMBER line missing or NaN for file ' + filePath);
 
