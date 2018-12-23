@@ -74,7 +74,7 @@ class NoteGroup {
      * @param renameDuplicates Rename duplicate files?
      */
     constructor(dir, renameDuplicates=true) {
-        this.allFiles = getFiles(dir)
+        this.allFiles = getFiles(dir).filter(x => !x.includes('.git'));
         this.filePaths = this.allFiles.filter(isValidExt);
         this.nonExtFilePaths = this.allFiles.filter(x => !isValidExt(x)).map(x => x.split(dir)[1]);
         this.inputDir = dir;
