@@ -186,3 +186,8 @@ hr {
     vertical-align: top;
     width: 250px;
 }
+
+img {
+	width: 70%;
+	margin-left: 15%;
+}
