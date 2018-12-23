@@ -9,6 +9,8 @@
   "author": "Bowserinator",
   "license": "MIT",
   "dependencies": {
+    "color-hash": "^1.0.3",
+    "fs-extra": "^7.0.1",
     "markdown-it": "^8.4.2",
     "markdown-it-abbr": "^1.0.4",
     "markdown-it-deflist": "^2.0.3",
@@ -16,6 +18,7 @@
     "markdown-it-highlightjs": "^3.0.0",
     "markdown-it-sub": "^1.0.0",
     "markdown-it-sup": "^1.0.0",
+    "mkdirp": "^0.5.1",
     "tinycolor2": "^1.4.1"
   }
 }
