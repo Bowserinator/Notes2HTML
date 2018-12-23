@@ -1,5 +1,8 @@
 'use strict';
 
+const path = require('path');
+const basePath = path.normalize(__dirname);
+
 const md = require('markdown-it')()
     .use(require('markdown-it-sub'))
     .use(require('markdown-it-sup'))
@@ -7,9 +10,9 @@ const md = require('markdown-it')()
     .use(require('markdown-it-deflist'))
     .use(require('markdown-it-abbr'))
     .use(require('markdown-it-highlightjs'));
-const customTagHandler = require('./customTagHandler.js');
-const config = require('./config.js');
-const categoryColor = require('./categoryColor.js');
+const customTagHandler = require(basePath + '/customTagHandler.js');
+const config = require(basePath + '/config.js');
+const categoryColor = require(basePath + '/categoryColor.js');
 
 const HTML_TEMPLATE = `
 <!DOCTYPE HTML>

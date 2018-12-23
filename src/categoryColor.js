@@ -1,6 +1,9 @@
 'use strict';
 
-const config = require('./config.js');
+const path = require('path');
+const basePath = path.normalize(__dirname);
+
+const config = require(basePath + '/config.js');
 const colorHash = require('color-hash');
 
 /**

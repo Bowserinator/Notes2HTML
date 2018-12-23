@@ -10,6 +10,8 @@
   "license": "MIT",
   "dependencies": {
     "color-hash": "^1.0.3",
+    "command-line-args": "^5.0.2",
+    "command-line-usage": "^5.0.5",
     "fs-extra": "^7.0.1",
     "markdown-it": "^8.4.2",
     "markdown-it-abbr": "^1.0.4",

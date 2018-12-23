@@ -5,8 +5,11 @@
 
 'use strict';
 
+const path = require('path');
+const basePath = path.normalize(__dirname);
+
 const tinycolor = require('tinycolor2');
-const config = require('./config.js');
+const config = require(basePath + '/config.js');
 
 const colorRegex = /\[COLOR (.*?)]([\s\S]*?)\[\/COLOR\]/gm;
 const defRegex = /\[DEF]([\s\S]*?)\[\/DEF\]/gm;

@@ -1,7 +1,10 @@
 'use strict';
 
-const config = require('./config.js');
-const categoryColor = require('./categoryColor.js');
+const path = require('path');
+const basePath = path.normalize(__dirname);
+
+const config = require(basePath + '/config.js');
+const categoryColor = require(basePath + '/categoryColor.js');
 
 const CATEGORY_TEMPLATE = `
 <!DOCTYPE HTML>

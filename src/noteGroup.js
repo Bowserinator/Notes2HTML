@@ -1,12 +1,15 @@
 'use strict';
 
+const path = require('path');
+const basePath = path.normalize(__dirname);
+
 const fs = require('fs-extra');
 const mkdirp = require('mkdirp');
 
-const config = require('./config.js');
-const categoryPage = require('./categoryPage.js');
-const categoryList = require('./allCategoryPage.js');
-const mdToHTML = require('./mdToHTML.js');
+const config = require(basePath + '/config.js');
+const categoryPage = require(basePath + '/categoryPage.js');
+const categoryList = require(basePath + '/allCategoryPage.js');
+const mdToHTML = require(basePath + '/mdToHTML.js');
 
 const fileRank = (a, b) => {
     return a.category === b.category ?
@@ -53,18 +56,29 @@ function addZero(n) {
 }
 
 /**
+ * Checks if an extension is valid
+ * @param x File path
+ */
+const isValidExt = x => {
+    let t = x.split('.');
+    return config.fileExt.includes(t[t.length - 1].toLowerCase());
+};
+
+/**
  * Collection of notes
  */
 class NoteGroup {
     /**
      * Construct a NoteGroup
-     * @param dir Directory of notes
+     * @param dir              Directory of notes
+     * @param renameDuplicates Rename duplicate files?
      */
-    constructor(dir) {
-        this.filePaths = getFiles(dir).filter(x => {
-            let t = x.split('.');
-            return config.fileExt.includes(t[t.length - 1].toLowerCase());
-        });
+    constructor(dir, renameDuplicates=true) {
+        this.allFiles = getFiles(dir)
+        this.filePaths = this.allFiles.filter(isValidExt);
+        this.nonExtFilePaths = this.allFiles.filter(x => !isValidExt(x)).map(x => x.split(dir)[1]);
+        this.inputDir = dir;
+
         this.files = [];
         this.categories = {};
 
@@ -84,6 +98,25 @@ class NoteGroup {
         /* Sort files by category, then subcategory, then rank */
         this.files.sort(fileRank);
 
+        /* Check for duplicates */
+        console.log('Checking for file duplicates...');
+        let seenFiles = {};
+
+        for (let file of this.files) {
+            let filep = file.path;
+
+            if (seenFiles[filep] > 0) {
+                seenFiles[filep]++;
+                log('[WARN] File ' + filep + ' is a duplicate, and will be ' +
+                    (renameDuplicates ? 'renamed' : 'overwritten'));
+
+                if (renameDuplicates)
+                    file.path = file.path.replace('.html', '_' + seenFiles[filep] + '.html');
+            }
+            else seenFiles[filep] = 1;
+        }
+        console.log('');
+
         for(let i = 0; i < this.files.length; i++)
             this.files[i].generateHTML(this.files[i - 1], this.files[i + 1]);
 
@@ -98,6 +131,10 @@ class NoteGroup {
      * @param dir Output dir 
      */
     outputToFolder(dir) {
+        log('Ensuring output folder is empty...');
+        fs.removeSync(dir);
+        console.log('');
+
         log('Copying web files to directory...');
         fs.copySync('./web', dir);
 
@@ -123,6 +160,17 @@ class NoteGroup {
         console.log('');
         fs.writeFileSync(dir + '/index.html', categoryList(Object.keys(this.categories)));
         log('Generating main category page...');
+
+        console.log('');
+
+        /* Copy over non-md files */
+        i = 1;
+        for (let path of this.nonExtFilePaths) {
+            mkdirp.sync(dir + path.substring(0, path.lastIndexOf('/')));
+            log(`[${i}] Copying file ${path}`);
+            fs.copySync(this.inputDir + path, dir + path);
+            i++;
+        }
     } 
 }
 
@@ -157,6 +205,13 @@ class File {
         }
         this.data = this.data.trim();
 
+        /* Try to extrapolate category and subcategory from folders */
+        let paths = filePath.split('/');
+        if (category === undefined) 
+            category = paths[paths.length - 3];
+        if (sub === undefined) 
+            sub = paths[paths.length - 2];
+
         if (title === undefined)
             throw new Exception('TITLE line missing for file ' + filePath);
         if (category=== undefined)
@@ -164,9 +219,7 @@ class File {
         if (sub === undefined)
             throw new Exception('SUB line missing for file ' + filePath);
         if (number === undefined || Number.isNaN(+number))
-            throw new Exception('NUMBER line missing or NaN for file ' + filePath);
-        if (title === 'index')
-            throw new Exception('Title cannot be called index, see file ' + filePath);
+            log('[ERROR] NUMBER line missing or NaN for file ' + filePath);
 
         this.number = +number;
         this.category = category;
