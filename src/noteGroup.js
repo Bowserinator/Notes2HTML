@@ -118,7 +118,7 @@ class NoteGroup {
         console.log('');
 
         for(let i = 0; i < this.files.length; i++)
-            this.files[i].generateHTML(this.files[i - 1], this.files[i + 1]);
+            this.files[i].generateHTML(this.files[i + 1], this.files[i - 1]);
 
         for (let category of Object.keys(this.categories)) {
             for (let sub of Object.keys(this.categories[category]))

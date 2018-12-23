@@ -9,7 +9,8 @@ const md = require('markdown-it')()
     .use(require('markdown-it-footnote'))
     .use(require('markdown-it-deflist'))
     .use(require('markdown-it-abbr'))
-    .use(require('markdown-it-highlightjs'));
+    .use(require('markdown-it-highlightjs'))
+    .use(require('@iktakahiro/markdown-it-katex'));
 const customTagHandler = require(basePath + '/customTagHandler.js');
 const config = require(basePath + '/config.js');
 const categoryColor = require(basePath + '/categoryColor.js');

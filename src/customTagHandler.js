@@ -15,7 +15,6 @@ const colorRegex = /\[COLOR (.*?)]([\s\S]*?)\[\/COLOR\]/gm;
 const defRegex = /\[DEF]([\s\S]*?)\[\/DEF\]/gm;
 const factRegex = /\[FACT]([\s\S]*?)\[\/FACT\]/gm;
 const QARegex = /\[A]([\s\S]*?)\[\/A\]/gm;
-const latexRegex = /\$\$([\s\S]*?)\$\$/gm;
 const interactiveRegex = /\[INTERACTIVE ([\s\S]*?)\]/gm;
 
 /**
@@ -68,61 +67,48 @@ ${text}
  * @return Formatted text
  */
 module.exports = function(text) {
-    /**
-     * Replace COLOR blocks, defined as [COLOR color_goes_here]text[/COLOR]
-     * with a div of the corresponding color. Text color is auto-determined
-     * based on lightness of color.
-     */
-    let colorMatches = findAll(colorRegex, text);
-    for (let match of colorMatches) 
-        text = text.replace(match[0], getColorBlock(match[2], match[1]));
+	/**
+	 * Replace COLOR blocks, defined as [COLOR color_goes_here]text[/COLOR]
+	 * with a div of the corresponding color. Text color is auto-determined
+	 * based on lightness of color.
+	 */
+	let colorMatches = findAll(colorRegex, text);
+	for (let match of colorMatches) 
+		text = text.replace(match[0], getColorBlock(match[2], match[1]));
 
-    /* Replace DEF and FACT blocks (Same as above, but with pre-defined colors) */
-    let defMatches = findAll(defRegex, text);
-    let factMatches = findAll(factRegex, text);
-    
-    for (let match of defMatches)
-        text = text.replace(match[0], getColorBlock(match[1], config.definitionColor));
-    for (let match of factMatches)
-        text = text.replace(match[0], getColorBlock(match[1], config.factColor));
+	/* Replace DEF and FACT blocks (Same as above, but with pre-defined colors) */
+	let defMatches = findAll(defRegex, text);
+	let factMatches = findAll(factRegex, text);
+	
+	for (let match of defMatches)
+		text = text.replace(match[0], getColorBlock(match[1], config.definitionColor));
+	for (let match of factMatches)
+		text = text.replace(match[0], getColorBlock(match[1], config.factColor));
 
-    /* Replace [A] with a question answer block */
-    let QAmatches = findAll(QARegex, text);
-    for (let match of QAmatches) {
-        text = text.replace('<p>' + match[0] + '</p>', `<button class="accordion">Show answer</button>
+	/* Replace [A] with a question answer block */
+	let QAmatches = findAll(QARegex, text);
+	for (let match of QAmatches) {
+		text = text.replace('<p>' + match[0] + '</p>', `<button class="accordion">Show answer</button>
 <div class="panel">
-    <p>${match[1]}</p>
+	<p>${match[1]}</p>
 </div>`);
-    }
+	}
 
-    /* LaTeX rendering with KaTex */
-    let latexMatches = findAll(latexRegex, text);
-    for (let match of latexMatches) {
-        let id = 'latex-block-' + Math.random();
-        text = text.replace(match[0], `<div id="${id}"></div>
-<script>
-addEvent(window, 'load', () => { katex.render(String.raw\`${match[1]}\`, document.getElementById('${id}'), { 
-    throwOnError: false,
-    displayMode: true
-}); });
-</script>`)
-    }
+	/* ASCII Math is handled by MathJax */
+	// Do nothing
 
-    /* ASCII Math is handled by MathJax */
-    // Do nothing
+	/* [INTERACTIVE] blocks are replaced by iframes */
+	let interactiveMatches = findAll(interactiveRegex, text);
+	for (let match of interactiveMatches) {
+		match[1] = match[1].split(' ');
 
-    /* [INTERACTIVE] blocks are replaced by iframes */
-    let interactiveMatches = findAll(interactiveRegex, text);
-    for (let match of interactiveMatches) {
-        match[1] = match[1].split(' ');
+		let src = match[1][0];
+		let width = match[1][1];
+		let height = match[1][2];
 
-        let src = match[1][0];
-        let width = match[1][1];
-        let height = match[1][2];
+		text = text.replace(match[0], `<iframe src="${src}" height="${height}" width="${width}"></iframe>`);
+	}
 
-        text = text.replace(match[0], `<iframe src="${src}" height="${height}" width="${width}"></iframe>`);
-    }
-
-    return text;
+	return text;
 };
 

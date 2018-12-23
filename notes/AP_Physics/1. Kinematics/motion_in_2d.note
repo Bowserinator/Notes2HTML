@@ -1,0 +1,62 @@
+TITLE Motion in 2D
+NUMBER 1
+
+**Quick note:** This note set is compiled from my AP Physics C notes, and is not a complete comprehensive note set of the physics curriculum. Subjects such as basic motion, vectors, etc... may be glossed over or not included.
+
+### Motion as a Vector
+Position, velocity, acceleration, etc... can be considered as vectors, where each component is seperate. For example, the x velocity component can only affect the x position component, and etc...
+
+1. Velocity is a rate of change of position, thus is a _derivative_ of position
+2. Acceleration is a rate of change of velocity, thus is a _derivative_ of velocity
+
+You can also _integrate_ to go backwards, ie from velocity to displacement (Not position) This is because you have a constant of integration equal to the initial position, which you can't find if you only have velocity.
+
+Since pos/vel/accel are vectors, you can take the derivative/integral of each component seperately.
+
+**Example:** Find acceleration of the velocity below
+$$v(t) = <6t, 5> m/s$$
+
+[A]
+$$a(t) = <6, 0> m/s^2$$
+
+Take the derivative of each individual component.
+[/A]
+
+### Challenge Problem 1
+You shoot a projectile from initial height _h_ with initial velocity _v_ at angle _θ_ above the horizontal.  If *g* is 9.8 m/s^2^ find the time it will take for the projectile to hit the ground, and the x distance traveled.
+
+[A]
+Consider the x and y components seperately. Projectile hits the ground when y is 0.
+$$y = -4.9t^2 + vsin(\theta)t + h$$
+$$t = \frac{-vsin(\theta) + \sqrt{v^2sin^2(\theta) + 19.6h)}}{-9.8}$$
+
+(Taking larger time solution)
+
+To get x distance traveled, multiple time by the x velocity.
+
+$$\text{distance}_x = vcos(\theta) \frac{-vsin(\theta) + \sqrt{v^2sin^2(\theta) + 19.6h)}}{-9.8}$$
+
+[/A]
+
+### Challenge Problem 2
+Given an initial velocity and angle, find the range equation for a projectile (for level ground)
+
+[A]
+We know final velocity (vertical) = -initial velocity (vertical) since projectile ends at same height. 
+
+$$-vsin(\theta) = vsin(\theta) - 9.8t$$
+
+$$t = \frac{vsin(\theta)}{4.9}$$
+
+Plug this into x range equation
+
+$$\text{distance}_x = \frac{vsin(\theta)}{4.9} vcos(\theta)$$
+
+You can "neatify" this equation a bit by multiplying the top and bottom by 2
+
+$$\text{distance}_x = \frac{2v^2 cos(\theta)sin(\theta)}{g}$$
+
+Then subbing in with the double angle identity.
+
+$$\text{distance}_x = \frac{2v^2 sin^2(\theta)}{g}$$
+[/A]

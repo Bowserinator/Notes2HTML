@@ -9,6 +9,7 @@
   "author": "Bowserinator",
   "license": "MIT",
   "dependencies": {
+    "@iktakahiro/markdown-it-katex": "^3.0.4",
     "color-hash": "^1.0.3",
     "command-line-args": "^5.0.2",
     "command-line-usage": "^5.0.5",
