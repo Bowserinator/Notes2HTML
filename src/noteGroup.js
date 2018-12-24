@@ -14,7 +14,7 @@ const mdToHTML = require(basePath + '/mdToHTML.js');
 const fileRank = (a, b) => {
     return a.category === b.category ?
         a.sub === b.sub ?
-            a.number - b.number : a.sub < b.sub ? 1 : -1
+            a.number - b.number : a.sub > b.sub ? 1 : -1
         : a.category < b.categry ? 1 : -1;
 }
 
